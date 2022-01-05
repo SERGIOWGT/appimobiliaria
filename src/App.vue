@@ -1,32 +1,50 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+   <v-app>
+      <AppBar v-if="$store.getters.loginFinalizado" 
+            :titulo="$store.getters.nomeSistema" 
+            :urlLogo="urlLogo"
+            :temBotaoMenu="true" :temBotaoSair="true"/>
+      <v-main>
+          <v-container grid-list-md class="pa-0" style="max-width: 600px;">
+            <UserBar v-if="$store.getters.userBarAtivo"/>
+            <transition appear name="slide" mode="out-in">
+              <Router-view/>
+            </transition>
+          </v-container>
+      </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import AppBar from './components/AppBar';
+import UserBar from './components/UserBar';
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
+export default {
+  name: 'App', 
+  components: { AppBar, UserBar}, 
+  data(){
+    return {
+      titulo: 'Painel Saúde',
+      urlLogo: './assets/logo.png'
+    }
+  }
+};
+</script>
+<style scoped>
+  .slide-leave-active{
+    transition: 0s;
+  }
+  .slide-enter-active {
+    transition: 0.3s;
+  }
+  .slide-enter {
+    transform: translate(100%, 0);
+  }
+  .slide-leave-to {
+    transform: translate(-100%, 0);
+  }
+  .v-app {
+    max-width:600px;
+    margin: 0 auto;
+  }
 </style>

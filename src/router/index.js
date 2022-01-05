@@ -1,29 +1,67 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Router from 'vue-router'
 
-Vue.use(VueRouter)
+import store from '../store.js'
+import loginView from '../views/LoginView.vue'
+import homeView from '../views/HomeView.vue'
+import inquilinoView from '../views/InquilinoView.vue'
+import imovelView from '../views/ImovelView.vue'
+import movimentacaoMensalView from '../views/MovimentacaoMensalView.vue'
+
+Vue.use(Router)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    {
+        path: '/login',
+        name: 'loginView',
+        component: loginView
+    },
+    {
+        path: '/home',
+        name: 'homeView',
+        component: homeView
+    },
+    {
+        path: '/imovel',
+        name: 'imovelView',
+        component: imovelView
+    },
+    {
+        path: '/inquilino',
+        name: 'inquilinoView',
+        component: inquilinoView
+    },
+    {
+        path: '/movimentacaoMensal',
+        name: 'movimentacaoMensalView',
+        component: movimentacaoMensalView
+    }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+//
+const RotasApp = new Router({routes})
 
-export default router
+
+RotasApp.beforeEach((to, from, next) => {
+    //console.log("from", from.path)
+    //console.log("to", to.path)
+    //console.log(`from => ${from.path}, to => ${to.path},  estaLogado => ${store.getters.estaLogado}`)
+
+/*     if (to.path == '/')
+        next()
+    else { */
+        if (!store.getters.estaLogado) {
+            if ((to.path == '/trocaSenha') || (to.path=='/registraUsuario')) {
+                next()
+            } else if (to.path != '/login') 
+                next('/login') 
+            else
+                next()
+        } else {
+            next()
+        }
+/*     } */
+    
+  })
+
+export default RotasApp
