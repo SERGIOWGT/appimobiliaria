@@ -32,15 +32,15 @@
           />  
       </v-flex>
     </v-flex>
-    <v-container>
+    <v-container >
       <MessageBox :tipo="tipoMensagem" :mensagem="mensagem" @cb= 'mensagem = ""'/>        
       <ProgressBar :mensagem="mensagemAguarde"/>
       <v-row class="justify-center pt-15 pb-15 px-3">
         <transition name="roll">
-          <v-img v-if="bounce" class="shrink mr-2" contain src="../assets/logoTelaAbertura.jpeg"/>
+          <v-img v-if="bounce" class="shrink mr-2" contain src="../assets/logoTelaAbertura.png"/>
         </transition>
       </v-row>
-      <v-flex v-if="telaPronta">
+      <v-flex v-if="telaPronta" >
         <v-form class="my-2 px-2 " v-model="formValido" >
           <v-text-field 
             :disabled="isLoading"

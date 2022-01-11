@@ -8,7 +8,7 @@ import {TheMask} from 'vue-the-mask'
 
 Vue.use(VueMask);
 Vue.use(TheMask);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,

@@ -1,6 +1,7 @@
 <template>
    <v-app>
       <AppBar v-if="$store.getters.loginFinalizado" 
+            :estaOnline="$store.getters.estaOnLine"
             :titulo="$store.getters.nomeSistema" 
             :urlLogo="urlLogo"
             :temBotaoMenu="true" :temBotaoSair="true"/>
@@ -26,6 +27,29 @@ export default {
     return {
       titulo: 'Painel Saúde',
       urlLogo: './assets/logo.png'
+    }
+  },
+  created() {
+    window.addEventListener('offline', this.setaRedeOffLine);
+    window.addEventListener('online', this.setaRedeOnline);
+  },
+  destroyed() {
+    window.removeEventListener('online', this.setaRedeOnline);
+    window.removeEventListener('offline', this.setaRedeOffLine);
+  },
+  mounted() {
+    const onLine = window.navigator.onLine
+    this.$store.commit('setaStatusRede', onLine)
+  },
+  methods: {
+    setaRedeOnline() {
+      console.log('Online');
+      this.$store.commit('setaStatusRede', true)
+    }, 
+    setaRedeOffLine() {
+      console.log('Offline');
+      this.mostraAlerta = true;
+      this.$store.commit('setaStatusRede', false)
     }
   }
 };

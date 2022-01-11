@@ -10,6 +10,7 @@ const enumNomeTabela = {
 
 const store = new Vuex.Store({
     state: {
+        estaOnline: false,
         estaLogado: false,
         loginFinalizado: false,
         userBarAtivo: false,
@@ -122,8 +123,12 @@ const store = new Vuex.Store({
             state.infosSistema.formatoSenha = obj.formatoSenha
             state.infosSistema.mensagemErroFormatoSenha = obj.mensagemErroFormatoSenha
         }, 
+        setaStatusRede (state, status) {
+          state.estaOnline = status
+        },
     },
     getters: {
+        estaOnLine: state => state.estaOnline,
         //configuracaoSistema: state => state.configuracaoSistema,
 
         loginFinalizado: state => state.loginFinalizado,

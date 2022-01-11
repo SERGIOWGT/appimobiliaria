@@ -92,13 +92,13 @@
 							<v-divider></v-divider>
 							<v-list-item-subtitle class="pa-1">
 								<v-row>
-									<v-col cols="4">Parcela: </v-col>
+									<v-col cols="6">Parcela: </v-col>
 									<v-col>{{linhaParcela(item.dataParcela || '', item.valorParcela || '')}}</v-col>
 								</v-row>
 							</v-list-item-subtitle>
 							<v-list-item-subtitle class="pa-1" v-if="item.pago == true">
 								<v-row>
-									<v-col cols="4">Pagamento: </v-col>
+									<v-col cols="6">Pagamento: </v-col>
 									<v-col>{{linhaParcela(item.dataPagamento || '', item.valorPago || '')}}</v-col>
 								</v-row>
 

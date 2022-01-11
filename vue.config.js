@@ -1,5 +1,10 @@
-const { defineConfig } = require('@vue/cli-service')
-module.exports = defineConfig({
-  transpileDependencies: true
-})
+module.exports = {
+  outputDir: 'd:/publicacao/app.Imobiliaria',
+  configureWebpack: {
+    devtool: 'source-map'
+  },
+  transpileDependencies: [
+    'vuetify'
+  ]
+}
 
