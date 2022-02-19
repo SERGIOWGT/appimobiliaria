@@ -97,7 +97,12 @@ export default {
 
     // Exclui
     excluiPagamentoParcela: (token, id) => {
-        const _url = `ContratosAluguel/pagamentoExclui/${id}`;
+        const _url = `ContratosAluguel/CancelaQuitacaoParcela/${id}`;
+
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    excluiQuitacaoRecebimento: (token, id) => {
+        const _url = `ContratosAluguel/CancelaQuitacaoRecebimento/${id}`;
 
         return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
     },
@@ -105,6 +110,12 @@ export default {
     // SALVA
     salvaPagamentoParcela: (token, param) => {
         const _url = 'ContratosAluguel/ParcelaQuita';
+        console.log(_url, param);
+
+        return http.put(_url, param, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    salvaQuitacaoRecebimento: (token, param) => {
+        const _url = 'ContratosAluguel/RecebimentoQuita';
         console.log(_url, param);
 
         return http.put(_url, param, { headers: { 'Authorization': `bearer ${token}`}});

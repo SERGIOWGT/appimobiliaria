@@ -63,6 +63,16 @@
               perms: [{id:3, tipoId:1, acao:'C'}, {id:3, tipoId:1, acao:'I'}, {id:3, tipoId:1, acao:'E'}]
           },
           {   
+              id: 5, 
+              textColor: 'teal--text text--lighten-2', 
+              text: 'Cadastre aqui os Despesas', 
+              icon: 'mdi-home-map-marker', 
+              iconColor: 'teal lighten-2', 
+              ativo: false,
+              func: 'naoImplementada()',
+              perms: [{id:5, tipoId:1, acao:'C'}, {id:5, tipoId:1, acao:'I'}, {id:5, tipoId:1, acao:'A'}, {id:5, tipoId:1, acao:'E'}]
+          },
+          {   
               id: 2, 
               textColor: 'teal--text text--lighten-2', 
               text: 'Gerencie os Contratos de Aluguel', 
@@ -70,7 +80,7 @@
               iconColor: 'teal lighten-2', 
               ativo: false,
               func: 'naoImplementada()',
-              perms: [{id:3, tipoId:1, acao:'C'}, {id:3, tipoId:1, acao:'I'}, {id:3, tipoId:1, acao:'E'}]
+              perms: [{id:4, tipoId:1, acao:'C'}, {id:4, tipoId:1, acao:'I'}, {id:4, tipoId:1, acao:'A'}, {id:4, tipoId:1, acao:'E'}]
           },
           {   
               id: 3, 
@@ -80,7 +90,7 @@
               iconColor: 'teal lighten-2', 
               ativo: false,
               func: 'naoImplementada()',
-              perms: [{id:3, tipoId:1, acao:'C'}, {id:3, tipoId:1, acao:'I'}, {id:3, tipoId:1, acao:'E'}]
+              perms: [{id:3, tipoId:1, acao:'C'}, {id:3, tipoId:1, acao:'I'}, {id:3, tipoId:1, acao:'A'}, {id:3, tipoId:1, acao:'E'}]
           },
           {   
               id: 4, 
@@ -90,7 +100,7 @@
               iconColor: 'teal lighten-2', 
               ativo: false,
               func: 'cadastraMonitoramento(2)',
-              perms: [{id:3, tipoId:1, acao:'C'}, {id:3, tipoId:1, acao:'I'}, {id:3, tipoId:1, acao:'E'}]
+              perms: [{id:6, tipoId:1, acao:'C'}]
           }
         ]
       }
@@ -121,8 +131,6 @@
           case 1:
             this.$router.push('movimentacaoMensal') 
             break;
-          case 2:
-            break;
           case 3:
             this.$router.push('inquilino');
             break
@@ -135,7 +143,6 @@
       },
       preparaTela() {
         const _permissionamentos = this.$store.getters.permissionamento;
-        console.log(_permissionamentos)
         let _temAcesso = false
         for (var i=0; i < this.funcionalidades.length; ++i) {
           _temAcesso = false

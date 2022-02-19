@@ -1,0 +1,42 @@
+get https://localhost:44328/api/inquilinos HTTP/1.1
+content-type: application/json
+
+###
+
+get https://localhost:44328/api/imoveis HTTP/1.1
+content-type: application/json
+###
+
+get https://localhost:44328/api/imoveis/27 HTTP/1.1
+content-type: application/json
+###
+
+get https://localhost:44328/api/contratosAluguel?imovelId=27 HTTP/1.1
+content-type: application/json
+###
+
+put  https://localhost:44328/api/ContratosAluguel/21/reajusta HTTP/1.1
+content-type: application/json
+
+{"Data": "2022-02-01", "valorAluguel": 2200}
+###
+post  https://localhost:44328/api/ContratosAluguel HTTP/1.1
+content-type: application/json
+
+{
+  "DataInicio":"2022-02-10",
+  "ValorAluguel": 300,
+  "TaxaAdministracao": 7,
+  "ImovelId": 6,
+  "InquilinoId": 22 
+}
+
+###
+put  https://localhost:44328/api/ContratosAluguel/24/assina HTTP/1.1
+content-type: application/json
+
+###
+put  https://localhost:44328/api/ContratosAluguel/20/encerra HTTP/1.1
+content-type: application/json
+
+{"Data": "2022-02-01"}

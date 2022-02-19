@@ -4,7 +4,9 @@
         <ProgressBar :mensagem="mensagemAguarde"/>          
         <IdentificacaoInquilino 
             v-show="etapaAtual == enumEtapa.emPesquisa"
-            :somenteConsulta='somenteConsulta'
+            :permiteInclusao='permiteInclusao'
+            :permiteAlteracao='permiteAlteracao'
+            :permiteExclusao='permiteExclusao'
             :executaRefresh='executaRefresh'
             @cbNovo= 'novo'
             @cbEdita='edita'
@@ -36,7 +38,7 @@
 </template>
 <script>
   import {carregaDadosPersistentes} from '../rotinasProjeto/rotinasProjeto'
-  import IdentificacaoInquilino from '../components/InquilinoIdentifica2';
+  import IdentificacaoInquilino from '../components/InquilinoIdentifica';
   import CadastraInquilino from '../components/InquilinoCadastra';
   //import ConsultaCidadao from '../components/CidadaoConsulta';
   import MessageBox from '../lastec.components/lastec-messagebox'
@@ -53,7 +55,6 @@
               {id:3, tipoId:1, acao:'I'},
               {id:3, tipoId:1, acao:'C'}
           ],
-          somenteConsulta: false,
           executaRefresh: false,
 
           inquilinoId: 0,
@@ -70,11 +71,24 @@
           mensagem: '',
           mensagemAguarde: '',
 
+          // seguranca
+          funcionalidadeId: 3,
+          permiteInclusao: false,
+          permiteExclusao: false,
+          permiteAlteracao: false,
+          somenteConsulta: false,
+
         }
       },
       mounted() {
+        const _permissionamentos = this.$store.getters.permissionamento;
+       
+        this.permiteInclusao = temAcesso(_permissionamentos, this.funcionalidadeId, 1, 'I');
+        this.permiteAlteracao = temAcesso(_permissionamentos, this.funcionalidadeId, 1, 'A');
+        this.permiteExclusao = temAcesso(_permissionamentos, this.funcionalidadeId, 1, 'E');
+        this.somenteConsulta = !(this.permiteInclusao || this.permiteAlteracao || this.permiteExclusao);
+
         this.$store.commit('habilitaUserbar', false)
-        this.somenteConsulta = temAcesso(this.$store.getters.permissionamento, 3, 1, 'I') ? false : true;
       },
       computed: {
         mensagemErro: {

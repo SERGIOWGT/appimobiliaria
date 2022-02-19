@@ -47,8 +47,16 @@ export default {
         const _token = store.getters.apiToken;
         return api.excluiPagamentoParcela(_token, pagamentoId);
     },
+    async excluiQuitacaoRecebimento (recebimentoParcelaId) {
+        const _token = store.getters.apiToken;
+        return api.excluiQuitacaoRecebimento(_token, recebimentoParcelaId);
+    },
 
     // SALVA
+    async salvaQuitacaoRecebimento (param) {
+        const _token = store.getters.apiToken;
+        return api.salvaQuitacaoRecebimento(_token, param);
+    },
     async salvaInquilino (id, param) {
         const _token = store.getters.apiToken;
         return api.salvaInquilino(_token, id, param);

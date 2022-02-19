@@ -41,7 +41,56 @@
 							:disabled="infoParcela.formularioValido == false"
 							color="primary" 
 							v-if="infoParcela.exclusao == false" 
-							@click="salvaOperacao()"
+							@click="salvaPagamento()"
+						>Salvar</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-sheet>
+		</v-bottom-sheet>
+
+		<v-bottom-sheet v-model="infoRecebimento.mostraDialog" inset max-width="500px">
+			<v-sheet class="text-center ">
+				<v-card tile class="pa-0 ma-0 ">
+					<v-card-title class="pa-2 teal lighten-2" >
+						<span class="white--text subtitle-1">{{infoRecebimento.titulo}}</span>
+					</v-card-title>
+					<v-divider></v-divider>
+					<v-card-text class="pa-0">
+						<v-form ref="myForm" class="mx-3" v-model="infoRecebimento.formularioValido">
+							<v-text-field class="mt-5 pt-2" 
+								dense disabled
+								label="Valor Pago"
+								v-model="infoRecebimento.valorPago"
+							/>
+							<v-text-field class="pt-2" v-if="infoRecebimento.exclusao == false"
+								dense disabled
+								label="Taxa de Administração"
+								v-model="infoRecebimento.valorTaxaAdm"
+							/>
+							<v-text-field class="pt-2" v-if="infoRecebimento.exclusao == false"
+								dense disabled
+								label="Valor Liquido"
+								v-model="infoRecebimento.valorLiquido"
+							/>
+							<v-text-field class="pt-2" v-if="infoRecebimento.exclusao == false"
+								dense autofocus required clearable
+								label="Data do Recebimento"
+								v-model="infoRecebimento.dataRecebimento"
+								v-mask="'##/##/####'"
+								:rules="[regras.Data.valida(true)]"
+								:disabled="infoRecebimento.exclusao == true" 
+							/>
+						</v-form>
+					</v-card-text>
+					<v-card-actions class="pt-1 px-5 ma-0">
+						<v-spacer></v-spacer>
+						<v-btn text small color="secundary" @click="infoRecebimento.mostraDialog = false">Fechar </v-btn>
+						<v-btn text small color="error" v-if="infoRecebimento.exclusao == true" @click="cancelaQuitacaoRecebimento()">Excluir</v-btn>
+						<v-btn text small 
+							:disabled="infoRecebimento.formularioValido == false"
+							color="primary" 
+							v-if="infoRecebimento.exclusao == false" 
+							@click="quitaRecebimento()"
 						>Salvar</v-btn>
 					</v-card-actions>
 				</v-card>
@@ -82,7 +131,7 @@
 		<v-list-item class="px-1 py-0">
 			<v-list-item-content>
 				<v-row>
-					<v-col cols="10">
+					<v-col>
 						<v-list-item-title v-html="item.nomeImovel || ''"></v-list-item-title>
 						<v-flex v-if="item.alugado == false">
 							<v-list-item-subtitle class="pa-1 black--text">Imóvel livre</v-list-item-subtitle>
@@ -92,25 +141,32 @@
 							<v-divider></v-divider>
 							<v-list-item-subtitle class="pa-1">
 								<v-row>
-									<v-col cols="6">Parcela: </v-col>
+									<v-col cols="3">Parcela: </v-col>
 									<v-col>{{linhaParcela(item.dataParcela || '', item.valorParcela || '')}}</v-col>
 								</v-row>
 							</v-list-item-subtitle>
-							<v-list-item-subtitle class="pa-1" v-if="item.pago == true">
+							<v-list-item-subtitle  class="pl-1 pt-1 pb-1 pr-0" v-if="item.pago == true">
 								<v-row>
-									<v-col cols="6">Pagamento: </v-col>
+									<v-col cols="3">Pagamento: </v-col>
 									<v-col>{{linhaParcela(item.dataPagamento || '', item.valorPago || '')}}</v-col>
 								</v-row>
-
 							</v-list-item-subtitle>
 						</v-flex>
 					</v-col>
-					<v-col cols="2" >
-						<v-container class="fill-height" fluid>
+					<v-col cols="2" v-if="infoSeguranca.somenteConsulta == false && item.alugado == true">
+						<v-container  class="fill-height" fluid>
 							<v-row justify="center" align="center">
 								<v-btn icon color="primary" v-on:click="novoContrato()" v-if="item.alugado == false" ><v-icon>mdi-file-sign</v-icon></v-btn>
-								<v-btn icon color="primary" v-on:click="preparaNovoPagamento(item.parcelaContratoId, item.dataParcela || '', item.valorParcela || '')" else v-if="item.alugado == true && item.pago == false" ><v-icon>mdi-cash-plus</v-icon></v-btn>
-								<v-btn icon color="red" v-on:click="preparaExclusaoPagamento(item.recebimentoParcelaId, item.dataParcela || '', item.valorParcela || '', item.dataPagamento || '')" else v-if="item.alugado == true && item.pago == true" ><v-icon>mdi-cash-minus</v-icon></v-btn>
+
+								<v-flex v-if="infoSeguranca.permiteQuitacaoInquilino == true">
+									<v-btn icon color="primary" v-on:click="preparaNovoPagamento(item.parcelaContratoId, item.dataParcela || '', item.valorParcela || '')" v-if="item.pago == false" ><v-icon>mdi-cash-plus</v-icon></v-btn>
+									<v-btn icon color="red" v-on:click="preparaExclusaoPagamento(item.recebimentoParcelaId, item.dataParcela || '', item.valorParcela || '', item.dataPagamento || '')" else v-if="item.pago == true && item.recebidoPeloProprietario == false" ><v-icon>mdi-cash-minus</v-icon></v-btn>
+								</v-flex>
+								<v-flex v-if="infoSeguranca.permiteQuitacaoImobiliaria == true ">
+									<v-btn icon color="primary" v-on:click="preparaNovoRecebimento(item.recebimentoParcelaId, item.valorParcela || 0, item.valorTaxaAdm || 0, item.valorLiquido || 0)" v-if="item.pago == true && item.recebidoPeloProprietario == false" ><v-icon>mdi-plus</v-icon></v-btn>
+									<v-btn icon color="red" v-on:click="preparaExclusaoRecebimento(item.recebimentoParcelaId, item.valorPago || 0)" else v-if="item.pago == true && item.recebidoPeloProprietario == true" ><v-icon>mdi-minus</v-icon></v-btn>
+								</v-flex>
+
 							</v-row>
 						</v-container>
 					</v-col>
@@ -129,6 +185,7 @@
 	import ProgressBar from '../lastec.components/lastec-progressbar'
 	import {strDateTime2StrDateBr, stringDataBr2Sql, data2String} from '../bibliotecas/formataValores'
 	import regrasCampos from '../bibliotecas/regrasCampos'
+	import {temAcesso} from '../rotinasProjeto/rotinasProjeto'
    
 	export default {
 		components: {TituloPagina, ProgressBar, MessageBox},
@@ -169,7 +226,27 @@
 					dataVencimento: '',
 					valorParcela: 0,
 					strValorParcela: '',
-					dataPagamento: ''                },
+					dataPagamento: ''                
+				},
+
+				infoRecebimento: {
+					titulo: '',
+					exclusao: false,
+					mostraDialog: false,
+					formularioValido: false,
+					recebimentoParcelaId: 0,
+					valorPago: 0,
+					valorTaxaAdm: 0,
+					valorLiquido: 0,
+					dataRecebimento: '',
+					strValorPago: ''
+				},
+
+				infoSeguranca: {
+					somenteConsulta: true,
+					permiteQuitacaoInquilino: false,
+					permiteQuitacaoImobiliaria: false
+				}
 			}
 		},
 		created() {
@@ -178,8 +255,13 @@
 			this.menorData = new Date(2021, 10, 1);
 		},
 		mounted() {
-			this.refresh();
+			const _permissionamentos = this.$store.getters.permissionamento;
+			this.infoSeguranca.permiteQuitacaoInquilino = temAcesso(_permissionamentos, 8, 2, '');
+			this.infoSeguranca.permiteQuitacaoImobiliaria = temAcesso(_permissionamentos, 9, 2, '');
+			console.log('this.infoSeguranca.permiteQuitacaoImobiliaria',this.infoSeguranca.permiteQuitacaoImobiliaria)
+			this.infoSeguranca.somenteConsulta = !this.infoSeguranca.permiteQuitacaoInquilino && !this.infoSeguranca.permiteQuitacaoImobiliaria;
 
+			this.refresh();
 		},
 		computed: {
 			mensagemErro: {
@@ -210,6 +292,29 @@
 			addMonth() {
 				this.dataAtual = new Date(this.dataAtual.getFullYear(), this.dataAtual.getMonth() + 1, 1);
 				this.refresh()
+			},
+			async cancelaQuitacaoRecebimento() {
+				
+				this.mensagemAguarde='Cancelando quitação. Aguarde...'
+				let _erro = false;
+				const _resp = await mainService.excluiQuitacaoRecebimento(this.infoRecebimento.id)
+				.catch(response => {
+				this.mensagemAguarde = '';
+					_erro = true;
+					this.mensagemErro = mainService.catchPadrao(response);
+				})
+				if (_erro) {
+					return;
+				}
+				this.mensagemAguarde = '';
+				console.log(_resp)
+				if (_resp.status != 204) { 
+					this.mensagemErro = _resp.message;
+					return 
+				}
+				this.mensagemSucesso = 'Cancelamento efetuado com sucesso';
+				this.infoRecebimento.mostraDialog = false;
+				this.refresh();
 			},
 			async excluiPagamento() {
 				
@@ -303,7 +408,10 @@
 					return ' 1 imóvel '  + (_valor == 0 ? '' :  ` - ${_valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}`);
 				}
 				const _valor = this.resultadoTela.reduce((a, b) => +a + +b.valorParcela, 0);
-				return ` ${_totalRegistros} imóveis ` + (_valor == 0 ? '' :  ` - ${_valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}`);
+				const _valorLiquido = this.resultadoTela.reduce((a, b) => +a + +b.valorLiquido, 0);
+				return ` ${_totalRegistros} imóveis ` + 
+							(_valor == 0 ? '' :  ` - ${_valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}` + 
+							(_valorLiquido == 0 ? '0' :  ` - (${_valorLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})})`));
             },
 			preparaExclusaoPagamento(recebimentoParcelaId, dataParcela, valorParcela, dataPagamento) {
 				this.infoParcela.titulo = 'Exclui Pagamento';
@@ -314,6 +422,13 @@
 				this.infoParcela.strValorParcela = valorParcela.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
 				this.infoParcela.dataPagamento = strDateTime2StrDateBr(dataPagamento, 'yyyy-mm-dd', '-');
 			},
+			preparaExclusaoRecebimento(recebimentoParcelaId, valorPago) {
+				this.infoRecebimento.titulo = 'Exclui Quitação com Proprietário';
+				this.infoRecebimento.mostraDialog = true;
+				this.infoRecebimento.exclusao = true;
+				this.infoRecebimento.id = recebimentoParcelaId;
+				this.infoRecebimento.valorPago = valorPago.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+			},
 			preparaNovoPagamento(parcelaId, dataParcela, valorParcela) {
 				this.infoParcela.titulo = 'Quitação de Parcela';
 				this.infoParcela.mostraDialog = true;
@@ -323,6 +438,16 @@
 				this.infoParcela.valorParcela = valorParcela;
 				this.infoParcela.strValorParcela = valorParcela.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
 				this.infoParcela.dataPagamento = (this.dataBrUltimoPgto) ? this.dataBrUltimoPgto : data2String(new Date(), 'BR');
+			},
+			preparaNovoRecebimento(recebimentoParcelaId, valorPago, valorTaxaAdm, valorLiquido) {
+				this.infoRecebimento.titulo = 'Quitação com Proprietário';
+				this.infoRecebimento.mostraDialog = true;
+				this.infoRecebimento.exclusao = false;
+				this.infoRecebimento.id = recebimentoParcelaId;
+				this.infoRecebimento.dataRecebimento = data2String(new Date(), 'BR');
+				this.infoRecebimento.valorPago = valorPago.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+				this.infoRecebimento.valorTaxaAdm = valorTaxaAdm.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+				this.infoRecebimento.valorLiquido = valorLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
 			},
 			async refresh() {
 				const _ano = this.dataAtual.getFullYear();
@@ -347,14 +472,37 @@
 
 				this.filtra();
 			},
-			salvaOperacao() {
-				if (this.infoParcela.exclusao) {
-					this.excluiPagamento()
+			
+			async quitaRecebimento() {                        
+				this.mensagemAguarde='Salvando os dados. Aguarde...'
+				let _erro = ''
+				const _data = stringDataBr2Sql(this.infoRecebimento.dataRecebimento);
+				const _param = {
+					recebimentoParcelaId: this.infoRecebimento.id,
+					data: _data
+				}
+
+				const _resp = await mainService.salvaQuitacaoRecebimento(_param)
+				.catch(response => {
+					_erro = mainService.catchPadrao(response)
+				})
+
+				this.mensagemAguarde = '';
+				if (_erro) {
+					this.mensagemErro = _erro;
 					return;
 				}
-				
-				this.salvaPagamento()
+				console.log(_resp)
+				if (_resp.status != 204) { 
+					this.mensagemErro = _resp.message;
+					return 
+				}
+				this.dataBrUltimoPgto = this.infoRecebimento.dataPagamento;
+				this.mensagemSucesso = 'Parcela recebida pelo proprietário com sucesso';
+				this.infoRecebimento.mostraDialog = false;
+				this.refresh();
 			},
+			
 			async salvaPagamento() {                        
 				this.mensagemAguarde='Salvando o pagamento. Aguarde...'
 				let _erro = ''

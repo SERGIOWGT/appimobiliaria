@@ -7,7 +7,6 @@
         icon="mdi-account"
       >
         Olá, {{nomeUsuario}} <br>
-        {{nomeCidade}}
       </v-alert>
     </v-container>
 </template>
@@ -17,14 +16,11 @@
     name: 'UserBar',
     data() {
       return {
-        nomeUsuario: '',
-        nomeCidade: ''
+        nomeUsuario: ''
       }
     },
     created() {
       this.nomeUsuario = store.getters.nomeUsuario
-      const cidade = store.getters.cidadePadrao
-      this.nomeCidade = cidade.nome
     }
   }
 </script>
