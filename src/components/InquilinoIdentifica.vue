@@ -2,7 +2,6 @@
     <v-container fluid style="height: 100vmax;" class="pa-1">
         <TituloPagina titulo="CONSULTA PARA CADASTRO DE INQUILINO" @cbAnterior="$router.back()" iconBotao=""/>
          <v-card flat class="pt-0 mt-1" tile>
-             {{permiteInclusao}}
             <v-data-table
                 hide-default-footer
                 hide-default-header
