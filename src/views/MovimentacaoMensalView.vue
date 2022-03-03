@@ -97,7 +97,7 @@
 			</v-sheet>
 		</v-bottom-sheet>
 
-		<v-flex class="px-5 pt-2">
+		<v-flex class="px-1 pt-2">
 			<v-row dense class="justify-center white--text teal lighten-2">
 				<v-col class="d-flex justify-start" cols="1">
 					<v-btn dark :disabled="dataAtual <= menorData" icon v-on:click="subMonth()"><v-icon>mdi-chevron-left</v-icon></v-btn>
@@ -185,7 +185,7 @@
 	import ProgressBar from '../lastec.components/lastec-progressbar'
 	import {strDateTime2StrDateBr, stringDataBr2Sql, data2String} from '../bibliotecas/formataValores'
 	import regrasCampos from '../bibliotecas/regrasCampos'
-	import {temAcesso} from '../rotinasProjeto/rotinasProjeto'
+	//import {temAcesso} from '../rotinasProjeto/rotinasProjeto'
    
 	export default {
 		components: {TituloPagina, ProgressBar, MessageBox},
@@ -255,9 +255,9 @@
 			this.menorData = new Date(2021, 10, 1);
 		},
 		mounted() {
-			const _permissionamentos = this.$store.getters.permissionamento;
-			this.infoSeguranca.permiteQuitacaoInquilino = temAcesso(_permissionamentos, 8, 2, '');
-			this.infoSeguranca.permiteQuitacaoImobiliaria = temAcesso(_permissionamentos, 9, 2, '');
+			//const _permissionamentos = this.$store.getters.permissionamento;
+			this.infoSeguranca.permiteQuitacaoInquilino = true; //temAcesso(_permissionamentos, 8, 2, '');
+			this.infoSeguranca.permiteQuitacaoImobiliaria = true; //temAcesso(_permissionamentos, 9, 2, '');
 			console.log('this.infoSeguranca.permiteQuitacaoImobiliaria',this.infoSeguranca.permiteQuitacaoImobiliaria)
 			this.infoSeguranca.somenteConsulta = !this.infoSeguranca.permiteQuitacaoInquilino && !this.infoSeguranca.permiteQuitacaoImobiliaria;
 
