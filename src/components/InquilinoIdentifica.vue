@@ -2,13 +2,9 @@
     <v-container fluid style="height: 100vmax;" class="pa-1">
         <TituloPagina titulo="CONSULTA PARA CADASTRO DE INQUILINO" @cbAnterior="$router.back()" iconBotao=""/>
          <v-card flat class="pt-0 mt-1" tile>
-             {{permiteInclusao}}
             <v-data-table
-                hide-default-footer
-                hide-default-header
-
                 :headers="headers"
-                :items="inquilinos"
+                :items="resultadoTela"
                 item-key="nome"
                 class="elevation-0"
                 :search="search"
@@ -34,6 +30,14 @@
                         label="Pesquisa por Nome"
                         class="mx-4"
                     ></v-text-field>
+                    <v-row class="d-flex justify-center pt-1 pb-5 pl-4 pr-1">
+                    <v-chip-group column v-model="filtro" mandatory>
+                        <v-chip filter outlined>Todos</v-chip>
+                        <v-chip filter outlined>Ativos</v-chip>
+                        <v-chip filter outlined>Inativos</v-chip>
+                    </v-chip-group>
+                </v-row>
+                <v-divider></v-divider>
                 </template>
                 <template v-slot:body="{ items }">
                     <v-list-item-group v-model="inquilinoIdSelecionado">
@@ -49,8 +53,9 @@
                                         <v-col cols="2" >
                                             <v-container class="fill-height py-0" fluid>
                                                 <v-row justify="center" align="center">
-                                                    <v-btn icon color="primary" @click="edita(item.id)"><v-icon>mdi-account-arrow-right-outline</v-icon></v-btn>
-                                                    <v-btn icon color="red" @click="exclui(item.id)"><v-icon>mdi-account-cancel-outline</v-icon></v-btn>
+                                                    <v-btn icon color="primary" @click="edita(item.id)"><v-icon>mdi-account-settings-outline</v-icon></v-btn>
+                                                    <v-btn v-if="item.status == 1" icon color="red" @click="inativa(item.id)"><v-icon>mdi-account-minus-outline</v-icon></v-btn>
+                                                    <v-btn v-else icon color="blue" @click="ativa(item.id)"><v-icon>mdi-account-plus-outline</v-icon></v-btn>
                                                 </v-row>
                                             </v-container>
                                         </v-col>
@@ -67,6 +72,7 @@
     </v-container>
 </template>
 <script>
+    import mainService from '../services/mainService'
     import TituloPagina from '../components/TituloPagina'
     import {strDateTime2StrDateBr} from '../bibliotecas/formataValores'
    
@@ -82,9 +88,10 @@
         data() {
             return {
                 search: '',
+                filtro: '',
                 headers: [
                     {
-                        text: 'Nome',
+                        text: 'Nome do Imovel',
                         align: 'start',
                         sortable: false,
                         value: 'nome',
@@ -96,6 +103,13 @@
                 itensPorPagina: 0,
                 
                 inquilinos: [],
+                resultadoTela: [],
+
+                enumFiltro: {
+                    todos: 0,
+                    ativos: 1,
+                    inativos: 2
+                },
 
                 // funcoes
                 inquilinoIdSelecionado: 0
@@ -110,6 +124,9 @@
                 if (newVal == true)
                     this.refresh();
             },
+            filtro() {
+                this.filtra();
+            }
         },
         computed: {
             tituloLista: function() {
@@ -125,11 +142,31 @@
             edita(id) {
                 this.$emit('cbEdita', id)
             },
-            exclui(id) {
-                this.$emit('cbExclui', id)
+            ativa(id) {
+                this.$emit('cbAtiva', id)
             },
-            refresh() {
-                this.inquilinos = this.$store.getters.Inquilinos;
+            inativa(id) {
+                this.$emit('cbInativa', id)
+            },
+            async refresh() {
+                //this.inquilinos = this.$store.getters.Inquilinos;
+                let _retorno = ''
+
+                this.mensagemAguarde =  'Buscando inquilinos! Aguarde...'
+                let resp = await mainService.listaInquilinos()
+                    .catch(
+                        err => {
+                            _retorno =  'ERR:3320-' + mainService.catchPadrao(err)
+                    });
+
+                this.mensagemAguarde =  '';
+                if (_retorno) {
+                    this.mensagemErro = _retorno;
+                    return;
+                }
+                this.inquilinos = resp.data;
+                console.log(this.inquilinos)
+                this.filtra();
             },
             linha(tipo, value){
                 if (tipo == 2) {
@@ -139,6 +176,21 @@
                 else if (tipo == 3) {
                     const _cpf = (value) ? value.replace(/(\d{2})(\d{5})(\d{4})/, '($1)$2-$3') : '' // eslint-disable-line
                     return `Celulares:<span class="nota_botao">&nbsp;${_cpf}</span> `
+                }
+            },
+            filtra() {
+                if (this.filtro == this.enumFiltro.todos) {
+                    this.resultadoTela = this.inquilinos;
+                    return;
+                }
+
+                if (this.filtro == this.enumFiltro.ativos) {
+                    this.resultadoTela = this.inquilinos.filter((p) => p.status === 1);
+                    return;
+                }
+                if (this.filtro == this.enumFiltro.inativos) {
+                    this.resultadoTela = this.inquilinos.filter((p) => p.status === 0);
+                    return;
                 }
             },
         }

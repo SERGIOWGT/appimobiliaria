@@ -5,6 +5,7 @@ import store from '../store'
 //const signKey = process.env.VUE_APP_SIGN_KEY
 export default {
     async listaInquilinos() {
+        /*
         const _lista = store.getters.inquilinos || [];
 
         if (_lista.length > 0) {
@@ -14,6 +15,7 @@ export default {
                 resolve(resp);
             });
         }
+        */
         const ret = await api.listaInquilinos(store.getters.apiToken);
         return ret;
     },
@@ -41,6 +43,10 @@ export default {
         const ret = await api.listaMovimentacaoMensal(store.getters.apiToken, ano, mes);
         return ret;
     },
+    async listaContratos() {
+        const ret = await api.listaContratos(store.getters.apiToken);
+        return ret;
+    },
 
     // Exclui
     async excluiPagamentoParcela (pagamentoId) {
@@ -50,6 +56,15 @@ export default {
     async excluiQuitacaoRecebimento (recebimentoParcelaId) {
         const _token = store.getters.apiToken;
         return api.excluiQuitacaoRecebimento(_token, recebimentoParcelaId);
+    },
+
+    async ativaInquilino (id) {
+        var _token = store.getters.ssoToken;
+        return api.ativaInquilino(_token, id);
+    },
+    async inativaInquilino (id) {
+        var _token = store.getters.ssoToken;
+        return api.inativaInquilino(_token, id);
     },
 
     // SALVA
@@ -64,6 +79,24 @@ export default {
     async salvaPagamentoParcela (param) {
         const _token = store.getters.apiToken;
         return api.salvaPagamentoParcela(_token, param);
+    },
+
+    // Outros Contratos
+    async assinaContrato (id) {
+        var _token = store.getters.ssoToken;
+        return api.assinaContrato(_token, id);
+    },
+    async encerraContrato (id, data) {
+        var _token = store.getters.ssoToken;
+        return api.encerraContrato(_token, id, data);
+    },
+    async postergaContrato (id) {
+        var _token = store.getters.ssoToken;
+        return api.postergaContrato(_token, id);
+    },
+    async reajustaContrato (id, data, valor) {
+        var _token = store.getters.ssoToken;
+        return api.reajustaContrato(_token, id, data, valor);
     },
 
     // OUTROS

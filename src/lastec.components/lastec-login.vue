@@ -285,6 +285,12 @@ export default {
         mostraformEsqueciSenha() {
             this.showFormEsqueciSenha =true
         },
+
+        /*
+          <v-img v-if="bounce" class="shrink mr-2" contain src="https://drive.google.com/thumbnail?id=1D2Oc29KB5cG4IK-iMGZRjagCvDq1gPcX"/>
+          <v-img v-if="bounce" class="shrink mr-2" contain src="https://drive.google.com/thumbnail?id=1D2Oc29KB5cG4IK-iMGZRjagCvDq1gPcX"/>
+        */
+
     }
 }
 
@@ -349,3 +355,4 @@ export default {
     }
   }
 </style>
+

@@ -7,7 +7,7 @@
     "homolog": "vue-cli-service serve --mode homolog",
     "prod": "vue-cli-service serve --mode prod",
     "build-homolog": "vue-cli-service build --mode homolog",
-    "build-prod": "vue-cli-service build --mode dev",
+    "build-prod": "vue-cli-service build --mode homolog",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

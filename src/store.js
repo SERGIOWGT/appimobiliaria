@@ -60,7 +60,7 @@ const store = new Vuex.Store({
             state.permissionamento = obj.permissionamento
         },
         carregaDadosPersistentes(state) {
-            state.db.tbInquilinos = JSON.parse(localStorage.getItem(enumNomeTabela.inquilino) ||'[]');
+            //state.db.tbInquilinos = JSON.parse(localStorage.getItem(enumNomeTabela.inquilino) ||'[]');
             state.db.tbImoveis = JSON.parse(localStorage.getItem(enumNomeTabela.imovel) ||'[]');
         },
         finalizaLogin (state, obj) {
@@ -81,11 +81,11 @@ const store = new Vuex.Store({
         limpaDadosPersistentes(state) {
             state.db.tbConfig.dataCarga = '';
             state.db.tbConfig.versao = '';
-            state.db.tbInquilinos = [];
+            //state.db.tbInquilinos = [];
             state.db.tbImoveis = [];
 
             localStorage.removeItem(enumNomeTabela.config);
-            localStorage.removeItem(enumNomeTabela.inquilino);
+            //localStorage.removeItem(enumNomeTabela.inquilino);
             localStorage.removeItem(enumNomeTabela.imovel);
         },
         logout(state) {
@@ -99,7 +99,7 @@ const store = new Vuex.Store({
             state.permissionamento = ''
         }, 
         salvaDadosPersistentes(state, dados) {
-            state.db.tbInquilinos = dados.inquilinos;
+            //state.db.tbInquilinos = dados.inquilinos;
             state.db.tbImoveis = dados.imoveis;
     
             state.db.tbConfig.dataCarga = new Date();
@@ -107,7 +107,7 @@ const store = new Vuex.Store({
 
             localStorage.setItem(enumNomeTabela.config, JSON.stringify(state.db.tbConfig));
             localStorage.setItem(enumNomeTabela.imovel, JSON.stringify(dados.imoveis));
-            localStorage.setItem(enumNomeTabela.inquilino, JSON.stringify(dados.inquilinos));
+            //localStorage.setItem(enumNomeTabela.inquilino, JSON.stringify(dados.inquilinos));
         },
         setaPermissao (state, obj) {
             state.permissionamento = obj

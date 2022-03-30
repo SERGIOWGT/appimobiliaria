@@ -60,11 +60,36 @@ export default {
     listaInquilinos: (token) => {
         return http.get('Inquilinos', {headers: {'Authorization': `bearer ${token}`}})
     },
+    listaContratos: (token) => {
+        return http.get('ContratosAluguel/ListaCompleta', {headers: {'Authorization': `bearer ${token}`}})
+    },
     listaMovimentacaoMensal: (token, ano, mes) => {
         const _url = `ContratosAluguel/ListaMovimentacaoMensal?ano=${ano}&mes=${mes}`
         console.log(_url)
         return http.get(_url, {headers: {'Authorization': `bearer ${token}`}})
     },
+    // Ativa / Inativa
+    ativaInquilino: (token, id) => {
+        const _url = `Inquilinos/${id}/Ativa`;
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    inativaInquilino: (token, id) => {
+        const _url = `Inquilinos/${id}/Inativa`;
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+
+    // Exclui
+    excluiPagamentoParcela: (token, id) => {
+        const _url = `ContratosAluguel/CancelaQuitacaoParcela/${id}`;
+
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    excluiQuitacaoRecebimento: (token, id) => {
+        const _url = `ContratosAluguel/CancelaQuitacaoRecebimento/${id}`;
+
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    
     // SALVA
     salvaInquilino: (token, id, param) => {
         let _url = (id == 0) ? 'Inquilinos' : `Inquilinos/${id}`
@@ -94,20 +119,6 @@ export default {
         http.post(_url, _param, { headers: { 'Authorization': `bearer ${token}`}}) 
             : http.put(_url, _param, { headers: { 'Authorization': `bearer ${token}`}});
     },
-
-    // Exclui
-    excluiPagamentoParcela: (token, id) => {
-        const _url = `ContratosAluguel/CancelaQuitacaoParcela/${id}`;
-
-        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
-    },
-    excluiQuitacaoRecebimento: (token, id) => {
-        const _url = `ContratosAluguel/CancelaQuitacaoRecebimento/${id}`;
-
-        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
-    },
-    
-    // SALVA
     salvaPagamentoParcela: (token, param) => {
         const _url = 'ContratosAluguel/ParcelaQuita';
         console.log(_url, param);
@@ -116,8 +127,25 @@ export default {
     },
     salvaQuitacaoRecebimento: (token, param) => {
         const _url = 'ContratosAluguel/RecebimentoQuita';
-        console.log(_url, param);
-
         return http.put(_url, param, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    // Outros Contrato
+    assinaContrato: (token, id) => {
+        const _url = `ContratosAluguel/${id}/Assina`;
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    encerraContrato: (token, id, data) => {
+        const _url = `ContratosAluguel/${id}/Encerra`;
+        const _param= {data: data};
+        return http.put(_url, _param, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    postergaContrato: (token, id) => {
+        const _url = `ContratosAluguel/${id}/Posterga`;
+        return http.put(_url, { headers: { 'Authorization': `bearer ${token}`}});
+    },
+    reajustaContrato: (token, id, data, valor) => {
+        const _url = `ContratosAluguel/${id}/Reajusta`;
+        const _param= {data: data, valorAluguel: valor};
+        return http.put(_url, _param, { headers: { 'Authorization': `bearer ${token}`}});
     },
 }

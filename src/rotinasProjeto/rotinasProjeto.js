@@ -38,11 +38,12 @@ export function hoje() {
 export async function carregaDadosPersistentes() {
     console.log('1')
     let params = {
-        inquilinos: [],
+        //inquilinos: [],
         imoveis: []
     }
     
     let retorno = '';
+    /*
     console.log('2')
     let respInquilino = await mainService.listaInquilinos()
         .catch(
@@ -52,6 +53,7 @@ export async function carregaDadosPersistentes() {
 
     if (retorno) 
         return retorno;
+    */
     
     let respImovel = await mainService.listaImoveis()
         .catch(
@@ -62,7 +64,7 @@ export async function carregaDadosPersistentes() {
     if (retorno) 
         return retorno;
         
-    params.inquilinos = respInquilino.status == 200 ? respInquilino.data : [];
+    //params.inquilinos = respInquilino.status == 200 ? respInquilino.data : [];
     params.imoveis = respImovel.status == 200 ? respImovel.data : [];
     
     store.commit('limpaDadosPersistentes');

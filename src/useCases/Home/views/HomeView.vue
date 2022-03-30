@@ -23,9 +23,9 @@
   </v-layout>
 </template>
 <script>
-  import MessageBox from '../lastec.components/lastec-messagebox'
-  import ProgressBar from '../lastec.components/lastec-progressbar'
-  import {temAcesso} from '../rotinasProjeto/rotinasProjeto'
+  import MessageBox from '@/lastec.components/lastec-messagebox'
+  import ProgressBar from '@/lastec.components/lastec-progressbar'
+  import {temAcesso} from '@/rotinasProjeto/rotinasProjeto'
 
   export default {
     components: {
@@ -130,6 +130,9 @@
         switch (id) {
           case 1:
             this.$router.push('movimentacaoMensal') 
+            break;
+          case 2:
+            this.$router.push('contratoAluguel') 
             break;
           case 3:
             this.$router.push('inquilino');

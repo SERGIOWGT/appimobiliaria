@@ -1,4 +1,4 @@
-get https://localhost:44328/api/inquilinos HTTP/1.1
+get https://localhost:5001/api/inquilinos HTTP/1.1
 content-type: application/json
 
 ###
@@ -7,11 +7,11 @@ get https://localhost:44328/api/imoveis HTTP/1.1
 content-type: application/json
 ###
 
-get https://localhost:44328/api/imoveis/27 HTTP/1.1
+get https://localhost:44328/api/imoveis/4 HTTP/1.1
 content-type: application/json
 ###
 
-get https://localhost:44328/api/contratosAluguel?imovelId=27 HTTP/1.1
+get https://localhost:44328/api/contratosAluguel?imovelId=14 HTTP/1.1
 content-type: application/json
 ###
 
@@ -24,19 +24,48 @@ post  https://localhost:44328/api/ContratosAluguel HTTP/1.1
 content-type: application/json
 
 {
-  "DataInicio":"2022-02-10",
-  "ValorAluguel": 300,
-  "TaxaAdministracao": 7,
-  "ImovelId": 6,
-  "InquilinoId": 22 
+  "DataInicio":"2022-02-21",
+  "ValorAluguel": 3000,
+  "TaxaAdministracao": 10,
+  "ImovelId": 26,
+  "InquilinoId": 25 
 }
 
 ###
-put  https://localhost:44328/api/ContratosAluguel/24/assina HTTP/1.1
+put  https://localhost:44328/api/ContratosAluguel/27/assina HTTP/1.1
 content-type: application/json
 
 ###
-put  https://localhost:44328/api/ContratosAluguel/20/encerra HTTP/1.1
+put  https://localhost:44328/api/ContratosAluguel/1/encerra HTTP/1.1
 content-type: application/json
 
 {"Data": "2022-02-01"}
+
+###
+put  https://localhost:44328/api/ContratosAluguel/19/posterga HTTP/1.1
+content-type: application/json
+
+###
+get  https://localhost:44328/api/ContratosAluguel/ListaMovimentacaoMensal?ano=2022&mes=03 HTTP/1.1
+content-type: application/json
+
+###
+post  https://localhost:44328/api/ContratosAluguel HTTP/1.1
+content-type: application/json
+
+{
+  "DataInicio":"2022-02-21",
+  "ValorAluguel": 3000,
+  "TaxaAdministracao": 10,
+  "ImovelId": 26,
+  "InquilinoId": 25 
+}
+
+###
+put  https://localhost:44328/api/ContratosAluguel/13/Reajusta HTTP/1.1
+content-type: application/json
+
+{
+  "Data":"2022-03-01",
+  "ValorAluguel": 600
+}

@@ -26,9 +26,6 @@ export function data2String(data, padrao) {
 
     const _dia = data.getDate().toString().padStart(2, "0")
     const _mes = (data.getMonth() + 1).toString().padStart(2, "0")
-
-
-    console.log(data.getDate())
     
     return (padrao == 'BR') ? 
         `${_dia}/${_mes}/${data.getFullYear()}` : `${data.getFullYear()}-${_mes}-${_dia}`

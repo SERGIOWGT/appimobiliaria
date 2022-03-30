@@ -2,15 +2,17 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import store from '../store.js'
-import loginView from '../views/LoginView.vue'
-import homeView from '../views/HomeView.vue'
+import loginView from '../useCases/login/views/LoginView.vue'
+import homeView from '../useCases/Home/views/HomeView.vue'
 import inquilinoView from '../views/InquilinoView.vue'
+import contratoAluguelView from '../useCases/ContratoAluguel/views/ContratoAluguelView'
 import imovelView from '../views/ImovelView.vue'
 import movimentacaoMensalView from '../views/MovimentacaoMensalView.vue'
 
 Vue.use(Router)
 
 const routes = [
+    
     {
         path: '/login',
         name: 'loginView',
@@ -35,7 +37,12 @@ const routes = [
         path: '/movimentacaoMensal',
         name: 'movimentacaoMensalView',
         component: movimentacaoMensalView
-    }
+    },
+    {
+        path: '/contratoAluguel',
+        name: 'contratoAluguelView',
+        component: contratoAluguelView
+    },
 ]
 
 //

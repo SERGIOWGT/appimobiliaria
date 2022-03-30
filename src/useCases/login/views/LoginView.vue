@@ -6,10 +6,10 @@
   </v-container>
 </template>
 <script>
-  import {carregaDadosPersistentes} from '../rotinasProjeto/rotinasProjeto'
-  import MessageBox from '../lastec.components/lastec-messagebox'
-  import ProgressBar from '../lastec.components/lastec-progressbar'
-  import Login from '../lastec.components/lastec-login'
+  import {carregaDadosPersistentes} from '@/rotinasProjeto/rotinasProjeto';
+  import MessageBox from '@/lastec.components/lastec-messagebox';
+  import ProgressBar from '@/lastec.components/lastec-progressbar';
+  import Login from '@/lastec.components/lastec-login.vue';
   
   export default {inject: {
       theme: {
